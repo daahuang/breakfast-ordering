@@ -1,11 +1,15 @@
-clear;
+% clear;
 % BF for breakfast
 BF_root = '/home/deanh/Documents/MATLAB/Breakfast_dataset';
 
 BF_func_dir = fullfile(BF_root, 'demo_bundle', 'functions');
 addpath(genpath(BF_func_dir));
 
-BF_fea_root = fullfile(BF_root, 'hist_h3d_c30');
+BF_demo_dir = fullfile(BF_root, 'demo_bundle', 'demo_breakfast');
+BF_dict_file = fullfile(BF_demo_dir, 'breakfast.dict');
+
+BF_fea_str = 'hist_h3d_c30';
+BF_fea_root = fullfile(BF_root, BF_fea_str);
 BF_seg_dir = fullfile(BF_root, 'segmentation');
 
 config.file_ending = '.txt';
@@ -43,10 +47,32 @@ for s = 1:length(Vid_test)
     pattern(s).train = array2regexp(v_train);  
 end
 
+% Get Breakfast action unit dictionary
+[unit_list] = textread(BF_dict_file , '%s');
+unit_list = unit_list(1:3:end);
+% move SIL to the end
+unit_list(end+1) = unit_list(1);
+unit_list(1) = [];
+
+DS_dir = '../data';
 for s = 1:length(pattern)
+    % TODO: pool 10 frames together
     features_dir = fullfile(BF_fea_root, sprintf('s%d', s));
     [features_test, labels_test, segfile_test] = load_features_with_segmentation(features_dir, BF_seg_dir, config.file_ending, config.normalization, 0, pattern(s).test, config.noSIL);
     disp(['found ' num2str(length(labels_test)) ' test sets']);
+    
+%     [features_train, labels_train, segfile_train] = load_features_with_segmentation(features_dir, BF_seg_dir, config.file_ending, config.normalization, 0, pattern(s).train, config.noSIL);
+%     disp(['found ' num2str(length(labels_train)) ' train sets']);
+    
+%     fname = fullfile(DS_dir, sprintf('BF_%s_s%d.mat', BF_fea_str, s));
+%     save(fname, 'features_test', 'labels_test', 'segfile_test', 'features_train', 'labels_train', 'segfile_train');
+    
+    % convert to ECCV14 action-ordering format
+    
+    
 end
+
+
+
 
 
