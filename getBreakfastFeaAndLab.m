@@ -1,4 +1,4 @@
-% clear;
+clear;
 % BF for breakfast
 BF_root = '/home/deanh/Documents/MATLAB/Breakfast_dataset';
 
@@ -55,20 +55,33 @@ unit_list(end+1) = unit_list(1);
 unit_list(1) = [];
 
 DS_dir = '../data';
+mkdir(DS_dir, 'BF');
+mkdir(DS_dir, 'BF2AO');
 for s = 1:length(pattern)
     % TODO: pool 10 frames together
     features_dir = fullfile(BF_fea_root, sprintf('s%d', s));
     [features_test, labels_test, segfile_test] = load_features_with_segmentation(features_dir, BF_seg_dir, config.file_ending, config.normalization, 0, pattern(s).test, config.noSIL);
     disp(['found ' num2str(length(labels_test)) ' test sets']);
     
-%     [features_train, labels_train, segfile_train] = load_features_with_segmentation(features_dir, BF_seg_dir, config.file_ending, config.normalization, 0, pattern(s).train, config.noSIL);
-%     disp(['found ' num2str(length(labels_train)) ' train sets']);
-    
-%     fname = fullfile(DS_dir, sprintf('BF_%s_s%d.mat', BF_fea_str, s));
-%     save(fname, 'features_test', 'labels_test', 'segfile_test', 'features_train', 'labels_train', 'segfile_train');
-    
     % convert to ECCV14 action-ordering format
+    [Xtest, Ytest, ~] = formatBF2AO(features_test, segfile_test, unit_list);
+    Ytest = cell2mat(Ytest);
     
+    [features_train, labels_train, segfile_train] = load_features_with_segmentation(features_dir, BF_seg_dir, config.file_ending, config.normalization, 0, pattern(s).train, config.noSIL);
+    disp(['found ' num2str(length(labels_train)) ' train sets']);
+    
+    [X, Y, annot] = formatBF2AO(features_train, segfile_train, unit_list);
+    
+    bf2ao_dir = fullfile(DS_dir, 'BF2AO', BF_fea_str, sprintf('s%d', s));
+    mkdir(bf2ao_dir);
+    bf2ao_path = fullfile(bf2ao_dir, 'dataset.mat');
+
+    bf_dir = fullfile(DS_dir, 'BF', BF_fea_str, sprintf('s%d', s));
+    mkdir(bf_dir);
+    bf_path = fullfile(bf_dir, 'features.mat');
+    
+    save(bf2ao_path, 'annot', 'X', 'Xtest', 'Y', 'Ytest');
+    save(bf_path, 'features_test', 'labels_test', 'segfile_test', 'features_train', 'labels_train', 'segfile_train');
     
 end
 

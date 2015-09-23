@@ -25,7 +25,7 @@ for k = 1:num_vid
         if isempty(a_idx)
             warning('segment_name not found vid: %d, seg: %d', k, i);
         else
-            y(start_t(i):end_t(i), a_idx) = 1
+            y(start_t(i):end_t(i), a_idx) = 1;
         end
     end
     Y_out{k} = y;
