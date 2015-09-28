@@ -8,12 +8,14 @@ addpath(genpath(BF_func_dir));
 BF_demo_dir = fullfile(BF_root, 'demo_bundle', 'demo_breakfast');
 BF_dict_file = fullfile(BF_demo_dir, 'breakfast.dict');
 
-BF_fea_str = 'hist_h3d_c30';
+% BF_fea_str = 'hist_h3d_c30';
+BF_fea_str = 'hist_dt_l2pn_c64';
 BF_fea_root = fullfile(BF_root, BF_fea_str);
 BF_seg_dir = fullfile(BF_root, 'segmentation');
 
 config.file_ending = '.txt';
-config.normalization = 'std_frame';
+% config.normalization = 'std_frame';
+config.normalization = 'std_dim';
 config.noSIL = '';
 
 % numSplits = 4;
@@ -65,6 +67,7 @@ for s = 1:length(pattern)
     
     % convert to ECCV14 action-ordering format
     [Xtest, Ytest, ~] = formatBF2AO(features_test, segfile_test, unit_list);
+    clips_test = cellfun(@(x) size(x,1), Ytest);
     Ytest = cell2mat(Ytest);
     
     [features_train, labels_train, segfile_train] = load_features_with_segmentation(features_dir, BF_seg_dir, config.file_ending, config.normalization, 0, pattern(s).train, config.noSIL);
@@ -80,7 +83,7 @@ for s = 1:length(pattern)
     mkdir(bf_dir);
     bf_path = fullfile(bf_dir, 'features.mat');
     
-    save(bf2ao_path, 'annot', 'X', 'Xtest', 'Y', 'Ytest');
+    save(bf2ao_path, 'annot', 'X', 'Xtest', 'Y', 'Ytest', 'clips_test');
     save(bf_path, 'features_test', 'labels_test', 'segfile_test', 'features_train', 'labels_train', 'segfile_train');
     
 end
