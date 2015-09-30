@@ -15,7 +15,7 @@ result_ordering = cell(size(splits));
 result_svm = cell(size(splits));
 
 for split = splits
-   datapath = fullfile(DS_dir, sprintf('%s_s%d.mat', fea_str, split));
+   datapath = fullfile(DS_dir, fea_str, sprintf('s%d', split), 'dataset.mat');
    outpath = fullfile(OUT_dir, sprintf('%s_s%d.mat', fea_str, split)); 
    try
        load(outpath);
