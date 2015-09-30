@@ -3,11 +3,11 @@ addpath(genpath('../packages'));
 
 %%
 OUT_dir = '../output/action-ordering';
-% fea_str = 'hist_dt_l2pn_c64';
-fea_str = 'hist_h3d_c30';
+fea_str = 'hist_dt_l2pn_c64';
+% fea_str = 'hist_h3d_c30';
 splits = 1:4;
 
-load clips_test
+% load clips_test
 
 %%
 result_ordering = cell(size(splits));
