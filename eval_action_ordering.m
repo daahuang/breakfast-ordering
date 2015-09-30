@@ -3,6 +3,7 @@ addpath(genpath('../packages'));
 
 %%
 OUT_dir = '../output/action-ordering';
+DS_dir = '../data/BF2AO';
 fea_str = 'hist_dt_l2pn_c64';
 % fea_str = 'hist_h3d_c30';
 splits = 1:4;
@@ -14,6 +15,7 @@ result_ordering = cell(size(splits));
 result_svm = cell(size(splits));
 
 for split = splits
+   datapath = fullfile(DS_dir, sprintf('%s_s%d.mat', fea_str, split));
    outpath = fullfile(OUT_dir, sprintf('%s_s%d.mat', fea_str, split)); 
    try
        load(outpath);
