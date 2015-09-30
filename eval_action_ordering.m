@@ -1,6 +1,6 @@
 clear;
 addpath(genpath('../packages'));
-
+addpath('../Breakfast_dataset/demo_bundle/functions')
 %%
 OUT_dir = '../output/action-ordering';
 DS_dir = '../data/BF2AO';
@@ -15,11 +15,11 @@ result_ordering = cell(size(splits));
 result_svm = cell(size(splits));
 
 for split = splits
-   datapath = fullfile(DS_dir, fea_str, sprintf('s%d', split), 'dataset.mat');
-   outpath = fullfile(OUT_dir, sprintf('%s_s%d.mat', fea_str, split)); 
+   DS_path = fullfile(DS_dir, fea_str, sprintf('s%d', split), 'dataset.mat');
+   OUT_path = fullfile(OUT_dir, sprintf('%s_s%d.mat', fea_str, split)); 
    try
-       load(outpath);
-       load(datapath, 'Xtest', 'Ytest', 'clips_test');
+       load(OUT_path);
+       load(DS_path, 'Xtest', 'Ytest', 'clips_test');
    catch ME
        warning(ME.message);
        continue;
